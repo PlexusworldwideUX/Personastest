@@ -6,7 +6,21 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss()
+    tailwindcss(),
+    {
+      name: 'ignore-figma-assets',
+      enforce: 'pre',
+      resolveId(source) {
+        if (source.startsWith('figma:asset/')) {
+          return '\0virtual:figma-asset'
+        }
+      },
+      load(id) {
+        if (id === '\0virtual:figma-asset') {
+          return 'export default ""'
+        }
+      }
+    }
   ],
   resolve: {
     alias: {
