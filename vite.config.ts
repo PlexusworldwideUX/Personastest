@@ -24,7 +24,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      'sonner@2.0.3': 'sonner'
+      'sonner@2.0.3': 'sonner',
+      'next-themes@0.4.6': 'next-themes'
     }
   }
 })
