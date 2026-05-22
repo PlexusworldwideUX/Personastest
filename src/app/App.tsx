@@ -250,7 +250,7 @@ export default function App() {
 
   const updateListItem = (list: 'goals' | 'needs' | 'painPoints', index: number, value: string) => {
     setPersonaData(prev => {
-      const newList = [...prev[list]];
+      const newList = [...(prev[list] || [])];
       newList[index] = value;
       return { ...prev, [list]: newList };
     });
@@ -274,8 +274,9 @@ export default function App() {
 
   // Calculate total personality score out of 100
   const totalScore = (() => {
+    if (!personaData || !personaData.traits) return 0;
     const values = Object.values(personaData.traits);
-    return values.reduce((a, b) => a + b, 0);
+    return values.reduce((a, b) => (a as number) + (b as number), 0) as number;
   })();
 
   const getEngagementLevel = (score: number) => {
@@ -299,6 +300,7 @@ export default function App() {
 
   // Function to determine potential business interest based on income
   const potentialBusinessInterest = (income: string) => {
+    if (!income) return "Low Business Interest";
     const incomeValue = parseFloat(income.replace(/[^0-9.-]+/g, ''));
     if (incomeValue < 50000) return "Low Business Interest";
     if (incomeValue < 100000) return "Moderate Business Interest";
@@ -307,6 +309,7 @@ export default function App() {
 
   // Function to calculate revenue based on income
   const getRevenueFromIncome = (income: string) => {
+    if (!income) return 675;
     const incomeValue = parseFloat(income.replace(/[^0-9.-]+/g, ''));
     if (incomeValue < 20000) return 675;
     if (incomeValue < 35000) return 775;
@@ -355,8 +358,8 @@ export default function App() {
             backgroundColor={getBackgroundColor(totalScore)}
             updateField={updateField}
             setPersonaData={setPersonaData}
-            imageUrl={personaData.imageUrl || ""}
-            imageTransform={personaData.imageTransform || { x: 0, y: 0, rotation: 0, zoom: 1 }}
+            imageUrl={personaData?.imageUrl || ""}
+            imageTransform={personaData?.imageTransform || { x: 0, y: 0, rotation: 0, zoom: 1 }}
             onImageChange={(url: string, transform: { x: number; y: number; rotation: number; zoom: number }) => {
               setPersonaData(prev => ({
                 ...prev,
@@ -385,24 +388,24 @@ export default function App() {
               <div className="content-stretch flex items-start leading-[normal] relative w-full gap-[32px] overflow-visible">
                 <div className="content-stretch flex flex-col font-['Montserrat:Bold',_sans-serif] font-bold items-start leading-[normal] relative shrink-0 flex-1">
                   <EditableText
-                    value={personaData.tagline}
+                    value={personaData?.tagline}
                     onChange={(val) => updateField('tagline', val)}
                     className="relative shrink-0 text-[#393939] text-[19px] w-full"
                   />
                   <EditableText
-                    value={personaData.name}
+                    value={personaData?.name}
                     onChange={(val) => updateField('name', val)}
                     className="relative shrink-0 text-[#99bbe2] text-[89px] w-full"
                     maxLength={9}
                   />
                   <div className="flex items-center gap-[8px]">
                     <EditableText
-                      value={personaData.personalityType}
+                      value={personaData?.personalityType}
                       onChange={(val) => updateField('personalityType', val)}
                       className="relative shrink-0 text-[#393939] text-[14px] font-italic"
                     />
                     <EditableText
-                      value={personaData.personalityTypeDetails}
+                      value={personaData?.personalityTypeDetails}
                       onChange={(val) => updateField('personalityTypeDetails', val)}
                       className="relative shrink-0 text-[#393939] text-[14px]"
                     />
@@ -411,11 +414,11 @@ export default function App() {
                 <div className="shrink-0">
                   <Frame73 
                     personalityScore={totalScore} 
-                    income={personaData.income}
-                    ambassadorRank={personaData.ambassadorRank}
-                    previousVIPStatus={personaData.previousVIPStatus}
-                    potentialBusinessInterest={personaData.potentialBusinessInterest}
-                    revenueOpportunity={personaData.revenueOpportunity}
+                    income={personaData?.income}
+                    ambassadorRank={personaData?.ambassadorRank}
+                    previousVIPStatus={personaData?.previousVIPStatus}
+                    potentialBusinessInterest={personaData?.potentialBusinessInterest}
+                    revenueOpportunity={personaData?.revenueOpportunity}
                     onHoverChange={(h, e) => handleTooltipHover('ambassadorRank', h, e)} 
                     onVIPHoverChange={(h, e) => handleTooltipHover('vip', h, e)} 
                     onTimeHoverChange={(h, e) => handleTooltipHover('time', h, e)} 
@@ -458,7 +461,7 @@ export default function App() {
                 ABOUT
               </SectionTitle>
               <EditableText
-                value={personaData.about}
+                value={personaData?.about}
                 onChange={(val) => updateField('about', val)}
                 className="font-['Avenir:Roman',_sans-serif] relative shrink-0 text-[#111111] text-[22px] w-[961px]"
                 multiline
@@ -470,7 +473,7 @@ export default function App() {
               {/* Goals */}
               <div className="content-stretch flex flex-col gap-[20px] items-start overflow-clip relative shrink-0 w-[440px]">
                 <SectionTitle className="w-full">GOALS</SectionTitle>
-                {personaData.goals.map((goal, idx) => (
+                {personaData?.goals?.map((goal, idx) => (
                   <BulletListItem
                     key={idx}
                     value={goal}
@@ -482,7 +485,7 @@ export default function App() {
               {/* Needs */}
               <div className="content-stretch flex flex-col gap-[20px] items-start overflow-clip relative shrink-0 w-[440px]">
                 <SectionTitle className="w-full">NEEDS</SectionTitle>
-                {personaData.needs.map((need, idx) => (
+                {personaData?.needs?.map((need, idx) => (
                   <BulletListItem
                     key={idx}
                     value={need}
@@ -500,7 +503,7 @@ export default function App() {
                 <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
                   <SectionTitle className="w-full">PAIN POINTS</SectionTitle>
                   <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                    {personaData.painPoints.map((point, idx) => (
+                    {personaData?.painPoints?.map((point, idx) => (
                       <div key={idx} className="content-stretch flex items-start justify-between relative shrink-0 w-full">
                         <div className="content-stretch flex gap-[10px] items-center relative self-stretch shrink-0">
                           <BulletPoint />
@@ -525,31 +528,31 @@ export default function App() {
                   </SectionTitle>
                   <Slider 
                     type="CSAT"
-                    value={personaData.csatTotal} 
+                    value={personaData?.csatTotal} 
                     onChange={(val) => updateField('csatTotal', val)} 
-                    tooltip={personaData.csatTooltip}
+                    tooltip={personaData?.csatTooltip}
                   />
                   <Slider 
                     type="CES"
-                    value={personaData.cesAverage} 
+                    value={personaData?.cesAverage} 
                     onChange={(val) => updateField('cesAverage', val)} 
-                    tooltip={personaData.cesTooltip}
+                    tooltip={personaData?.cesTooltip}
                   />
                   <Slider 
                     type="NPS"
-                    value={personaData.npsTotal} 
+                    value={personaData?.npsTotal} 
                     onChange={(val) => updateField('npsTotal', val)} 
-                    tooltip={personaData.npsTooltip}
+                    tooltip={personaData?.npsTooltip}
                   />
                 </div>
               </div>
 
               {/* Personality Traits */}
               <PersonalityTraits
-                traits={personaData.traits}
+                traits={personaData?.traits || { analytical: 0, pragmatic: 0, patient: 0, assertive: 0, adaptable: 0 }}
                 totalScore={totalScore}
                 updateTrait={updateTrait}
-                traitInsights={personaData.traitInsights}
+                traitInsights={personaData?.traitInsights}
               />
             </div>
 
@@ -557,7 +560,7 @@ export default function App() {
             <EngagementScale
               totalScore={totalScore}
               getEngagementLevel={getEngagementLevel}
-              nurtureText={personaData.nurtureText || ""}
+              nurtureText={personaData?.nurtureText || ""}
               onNurtureTextChange={(val) => updateField('nurtureText', val)}
             />
           </div>
