@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { Share2, Check } from "lucide-react";
 
+// Restoring the initial state function required by App.tsx
+export const getInitialPersonaState = () => {
+  return null;
+};
+
 export const ShareStateButton: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
