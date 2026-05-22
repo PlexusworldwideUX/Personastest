@@ -473,7 +473,7 @@ export default function App() {
               {/* Goals */}
               <div className="content-stretch flex flex-col gap-[20px] items-start overflow-clip relative shrink-0 w-[440px]">
                 <SectionTitle className="w-full">GOALS</SectionTitle>
-                {personaData?.goals?.map((goal, idx) => (
+                {personaData?.goals?(personaData.xxx || []).map((goal, idx) => (
                   <BulletListItem
                     key={idx}
                     value={goal}
@@ -485,7 +485,7 @@ export default function App() {
               {/* Needs */}
               <div className="content-stretch flex flex-col gap-[20px] items-start overflow-clip relative shrink-0 w-[440px]">
                 <SectionTitle className="w-full">NEEDS</SectionTitle>
-                {personaData?.needs?.map((need, idx) => (
+                {personaData?.needs?(personaData.xxx || []).map((need, idx) => (
                   <BulletListItem
                     key={idx}
                     value={need}
@@ -503,7 +503,7 @@ export default function App() {
                 <div className="content-stretch flex flex-col gap-[8px] items-start overflow-clip relative shrink-0 w-full">
                   <SectionTitle className="w-full">PAIN POINTS</SectionTitle>
                   <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                    {personaData?.painPoints?.map((point, idx) => (
+                    {personaData?.painPoints?(personaData.xxx || []).map((point, idx) => (
                       <div key={idx} className="content-stretch flex items-start justify-between relative shrink-0 w-full">
                         <div className="content-stretch flex gap-[10px] items-center relative self-stretch shrink-0">
                           <BulletPoint />
