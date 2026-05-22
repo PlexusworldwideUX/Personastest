@@ -8,4 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  resolve: {
+    alias: {
+      'sonner@2.0.3': 'sonner'
+    }
+  }
 })
