@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Code, Check, Copy } from "lucide-react";
 
 interface CodeEditorButtonProps {
@@ -22,10 +21,8 @@ export const CodeEditorButton: React.FC<CodeEditorButtonProps> = ({ codeString }
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="h-8 gap-1.5 text-xs font-medium"
+    <button
+      className="inline-flex items-center justify-center rounded-md border border-neutral-200 bg-white px-3 py-1 text-xs font-medium h-8 gap-1.5 transition-colors hover:bg-neutral-100 hover:text-neutral-900 shadow-sm cursor-pointer"
       onClick={handleCopy}
     >
       {copied ? (
@@ -39,6 +36,6 @@ export const CodeEditorButton: React.FC<CodeEditorButtonProps> = ({ codeString }
           <span>Copy Code</span>
         </>
       )}
-    </Button>
+    </button>
   );
 };
